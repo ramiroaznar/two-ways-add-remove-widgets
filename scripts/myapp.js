@@ -109,7 +109,7 @@
             };
 
             cdb.$('#add1').click(function() {
-                var histoWidget = dashboard.createCategoryWidget(histo,myapp.layers[1]);
+                var histoWidget = dashboard.createHistogramWidget(histo,myapp.layers[1]);
                 
                 cdb.$('#remove1').click(function() {
                     histoWidget.remove();
