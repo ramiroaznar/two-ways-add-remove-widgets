@@ -5,13 +5,13 @@
     window.onload = function () {
 
         // the URL to your viz.json
-        var diJSON = 'https://team.cartodb.com/u/ramirocartodb/api/v3/viz/1740ac74-384e-11e6-91fe-0e31c9be1b51/viz.json';
+        var diJSON = 'https://team.cartodb.com/u/ramirocartodb/api/v3/viz/6b168b90-4350-11e6-8eac-0e5db1731f59/viz.json';
 
 
         var username = diJSON.match(/\/u\/(.+)\/api\/v\d\/|:\/\/(.+)\.cartodb\.com\/api/i)[1],
             myapp = window.myapp;
 
-        // SQL client, inf needed
+        // SQL client, if needed
         myapp.sqlclient = new cartodb.SQL({
             user: username,
             protocol: "https",
@@ -25,45 +25,18 @@
             // DI map
             myapp.map = dashboard.getMap();
 
-            // Leaflet map object
-            // myapp.Lmap = myapp.map.getNativeMap();
-
             // CartoDB layers
             myapp.layers = myapp.map.getLayers();
 
-            // if the layer has an analysis node, its SQL is not exposed in the API
-            // WARNING: this will be modified in upcoming iterations
-            myapp.layers.map(function (a) {
-                var tmp;
-                if (a.attributes.sql == void 0) {
-                    tmp = dashboard._dashboard.vis._analysisCollection.models.filter(function (b) {
-                        return b.id == a.attributes.source;
-                    })[0];
-                    if (tmp != void 0) {
-                        a.attributes.sql = tmp.attributes.query;
-                    } else {
-                        if (a.attributes.type == 'CartoDB') console.warn('This may be a named map, check the privacy of the map and the datasets involved');
-                    }
-                }
-                return a;
+            // Array of widgets views
+            myapp.widgets = dashboard.getWidgets();
+
+            // Array of widgets’ data models
+            myapp.widgetsdata = myapp.widgets.map(function (a) {
+                return a.dataviewModel
             });
 
-            // Array of widgets views
-            // myapp.widgets = dashboard.getWidgets();
-
-            // // Array of widgets’ data models
-            // myapp.widgetsdata = myapp.widgets.map(function (a) {
-            //     return a.dataviewModel
-            // });
-
-
-
-            // // retrieve the widgets container so we can add a custom one if needed
-            // myapp.wcontainer = cdb.$('#' + vis.$el.context.id + ' .CDB-Widget-canvasInner').get(0);
-
-            /* function to add widgets
-             * The options are described at: https://github.com/CartoDB/deep-insights.js/blob/master/doc/api.md
-             */
+            // addWidget function
             myapp.addWidget = function (type, layer_index, options) {
                 try {
                     var layer = myapp.layers[layer_index];
@@ -91,7 +64,7 @@
                 }
             }
 
-            /* Function to remove widgets based on the index in myapp.widgets array */
+            // removeWidget function
             myapp.removeWidget = function (index) {
                 myapp.widgets[index].remove();
                 myapp.widgets = dashboard.getWidgets();
@@ -110,7 +83,9 @@
 
             cdb.$('#add1').click(function() {
                 var histoWidget = dashboard.createHistogramWidget(histo,myapp.layers[1]);
-                
+                debugger;
+                console.log(histoWidget)
+
                 cdb.$('#remove1').click(function() {
                     histoWidget.remove();
                  });
@@ -128,7 +103,6 @@
                  });
 
             });
-
 
         });
     }
