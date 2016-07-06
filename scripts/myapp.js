@@ -83,9 +83,6 @@
 
             cdb.$('#add1').click(function() {
                 var histoWidget = dashboard.createHistogramWidget(histo,myapp.layers[1]);
-                debugger;
-                console.log(histoWidget)
-
                 cdb.$('#remove1').click(function() {
                     histoWidget.remove();
                  });
